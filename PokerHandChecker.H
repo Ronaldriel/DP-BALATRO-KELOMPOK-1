@@ -21,6 +21,7 @@ class PokerHandChecker {
 public:
     virtual HandRank check(const Hand& hand) = 0;
     void setNext(PokerHandChecker* next);
+    PokerHandChecker* getNext() { return nextChecker; }
 protected:
     PokerHandChecker* nextChecker = nullptr;
 };

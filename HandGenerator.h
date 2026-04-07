@@ -3,5 +3,5 @@
 
 class HandGenerator {
 public:
-    Hand generateHand();
+    void generateHand();
 };

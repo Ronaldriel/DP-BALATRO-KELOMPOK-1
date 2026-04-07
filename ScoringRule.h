@@ -1,13 +1,12 @@
 #pragma once
 #include "Hand.h"
-#include "PokerHandChecker.h"
-
+#include "PokerHandChecker.H"
 
 class ScoringRule {
 public:
     ScoringRule();
     int scoreHand(const Hand& hand);
-private:
-   
     int convertRankToScore(HandRank rank);
+private:
+    PokerHandChecker* checkerChain;
 };
