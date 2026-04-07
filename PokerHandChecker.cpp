@@ -1,4 +1,4 @@
-#include "PokerHandChecker.h"
+#include "PokerHandChecker.H"
 
 void PokerHandChecker::setNext(PokerHandChecker* next) {
     nextChecker = next;
