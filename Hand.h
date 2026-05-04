@@ -1,7 +1,9 @@
 #pragma once
 #include <random>
+#include "Card.h"
 
 struct Hand {
+    std::vector<Card> cards;
     int value ;
     Hand() {
         //static std::mt19937 rng(std::random_device{}());
