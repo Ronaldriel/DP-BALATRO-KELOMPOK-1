@@ -10,8 +10,8 @@ public:
     void runSession();
 private:
     HandGenerator handGenerator;
-    HandPlayer handPlayer;
-    ScoringRule scoringRule;
-    BlindRule blindRule;
-    RewardRule rewardRule;
+    HandPlayer    handPlayer;
+    ScoringRule   scoringRule;
+    BlindRule     blindRule;
+    RewardRule    rewardRule;
 };

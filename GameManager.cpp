@@ -3,10 +3,13 @@
 
 void GameManager::runSession() {
     std::cout << "=== Run Started ===\n";
-    handGenerator.generateHand();
-    handPlayer.playHand();
-    Hand hand;
-    int score = scoringRule.scoreHand(hand);
+
+    Hand hand = handGenerator.generateHand();
+    ChosenHand chosen = handPlayer.playHand(hand);
+
+    int score = scoringRule.scoreHand(chosen);
+    std::cout << "Score: " << score << "\n";
+
     bool win = blindRule.checkBlind(score);
     int reward = rewardRule.earnMoney(win, score);
     std::cout << "Money gained: " << reward << "\n";

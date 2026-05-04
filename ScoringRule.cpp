@@ -3,62 +3,60 @@
 #include "HandCheckers.h"
 
 ScoringRule::ScoringRule() {
-    // Build chain (lowest to highest priority)
-    static HighCardChecker     highCard;
-    static PairChecker         pair;
-    static TwoPairChecker      twoPair;
-    static ThreeOfAKindChecker threeOfAKind;
-    static StraightChecker     straight;
-    static FlushChecker        flush;
-    static FullHouseChecker    fullHouse;
-    static FourOfAKindChecker  fourOfAKind;
+    // Chain dari TERTINGGI ke TERENDAH
+    // FlushFive -> FlushHouse -> FiveOfAKind -> RoyalFlush -> StraightFlush
+    // -> FourOfAKind -> FullHouse -> Flush -> Straight
+    // -> ThreeOfAKind -> TwoPair -> Pair -> HighCard
+    static FlushFiveChecker     flushFive;
+    static FlushHouseChecker    flushHouse;
+    static FiveOfAKindChecker   fiveOfAKind;
+    static RoyalFlushChecker    royalFlush;
     static StraightFlushChecker straightFlush;
-    static RoyalFlushChecker   royalFlush;
-    static FiveOfAKindChecker  fiveOfAKind;
-    static FlushHouseChecker   flushHouse;
-    static FlushFiveChecker    flushFive;
+    static FourOfAKindChecker   fourOfAKind;
+    static FullHouseChecker     fullHouse;
+    static FlushChecker         flush;
+    static StraightChecker      straight;
+    static ThreeOfAKindChecker  threeOfAKind;
+    static TwoPairChecker       twoPair;
+    static PairChecker          pair;
+    static HighCardChecker      highCard;
 
-    highCard.setNext(&pair);
-    pair.setNext(&twoPair);
-    twoPair.setNext(&threeOfAKind);
-    threeOfAKind.setNext(&straight);
-    straight.setNext(&flush);
-    flush.setNext(&fullHouse);
-    fullHouse.setNext(&fourOfAKind);
-    fourOfAKind.setNext(&straightFlush);
-    straightFlush.setNext(&royalFlush);
-    royalFlush.setNext(&fiveOfAKind);
-    fiveOfAKind.setNext(&flushHouse);
-    flushHouse.setNext(&flushFive);
+    flushFive.setNext(&flushHouse);
+    flushHouse.setNext(&fiveOfAKind);
+    fiveOfAKind.setNext(&royalFlush);
+    royalFlush.setNext(&straightFlush);
+    straightFlush.setNext(&fourOfAKind);
+    fourOfAKind.setNext(&fullHouse);
+    fullHouse.setNext(&flush);
+    flush.setNext(&straight);
+    straight.setNext(&threeOfAKind);
+    threeOfAKind.setNext(&twoPair);
+    twoPair.setNext(&pair);
+    pair.setNext(&highCard);
 
-    checkerChain = &highCard;
+    checkerChain = &flushFive;
 }
 
-int ScoringRule::scoreHand(const Hand& hand) {
-    // Traverse chain hand.value kali agar checker yang sesuai yang dipanggil
-    PokerHandChecker* current = checkerChain;
-    for (int i = 0; i < hand.value && current->getNext() != nullptr; i++) {
-        current = current->getNext();
-    }
-    HandRank rank = current->check(hand);
+int ScoringRule::scoreHand(const ChosenHand& hand) {
+    HandRank rank = checkerChain->check(hand);
     return convertRankToScore(rank);
 }
 
 int ScoringRule::convertRankToScore(HandRank rank) {
     switch (rank) {
-        case HandRank::HIGH_CARD:      return 5;
-        case HandRank::PAIR:           return 10;
-        case HandRank::TWO_PAIR:       return 20;
-        case HandRank::THREE_OF_A_KIND:return 30;
-        case HandRank::STRAIGHT:       return 30;
-        case HandRank::FLUSH:          return 35;
-        case HandRank::FULL_HOUSE:     return 40;
-        case HandRank::FOUR_OF_A_KIND: return 60;
-        case HandRank::STRAIGHT_FLUSH: return 100;
-        case HandRank::ROYAL_FLUSH:    return 100;
-        case HandRank::FIVE_OF_A_KIND: return 120;
-        case HandRank::FLUSH_HOUSE:    return 140;
-        case HandRank::FLUSH_FIVE:     return 160;
-        default:                       return 0;
+        case HandRank::HIGH_CARD:       return 5;
+        case HandRank::PAIR:            return 10;
+        case HandRank::TWO_PAIR:        return 20;
+        case HandRank::THREE_OF_A_KIND: return 30;
+        case HandRank::STRAIGHT:        return 30;
+        case HandRank::FLUSH:           return 35;
+        case HandRank::FULL_HOUSE:      return 40;
+        case HandRank::FOUR_OF_A_KIND:  return 60;
+        case HandRank::STRAIGHT_FLUSH:  return 100;
+        case HandRank::ROYAL_FLUSH:     return 100;
+        case HandRank::FIVE_OF_A_KIND:  return 120;
+        case HandRank::FLUSH_HOUSE:     return 140;
+        case HandRank::FLUSH_FIVE:      return 160;
+        default:                        return 0;
     }
 }

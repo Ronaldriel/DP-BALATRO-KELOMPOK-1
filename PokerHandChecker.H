@@ -1,5 +1,5 @@
 #pragma once
-#include "Hand.h"
+#include "ChosenHand.h"
 
 enum class HandRank {
     HIGH_CARD,
@@ -19,7 +19,7 @@ enum class HandRank {
 
 class PokerHandChecker {
 public:
-    virtual HandRank check(const Hand& hand) = 0;
+    virtual HandRank check(const ChosenHand& hand) = 0;
     void setNext(PokerHandChecker* next);
     PokerHandChecker* getNext() { return nextChecker; }
 protected:
