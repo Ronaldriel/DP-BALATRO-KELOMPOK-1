@@ -39,7 +39,16 @@ ScoringRule::ScoringRule() {
 
 int ScoringRule::scoreHand(const ChosenHand& hand) {
     HandRank rank = checkerChain->check(hand);
-    return convertRankToScore(rank);
+
+    int baseScore = convertRankToScore(rank);
+
+    int cardScore = 0;
+
+    for (const auto& card : hand.getCards()) {
+        cardScore += static_cast<int>(card.rank);
+    }
+
+    return baseScore + cardScore;
 }
 
 int ScoringRule::convertRankToScore(HandRank rank) {
