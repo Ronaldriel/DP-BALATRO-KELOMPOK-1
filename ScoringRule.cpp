@@ -2,11 +2,8 @@
 #include "ScoringRule.h"
 #include "HandCheckers.h"
 
-ScoringRule::ScoringRule() {
-    // Chain dari TERTINGGI ke TERENDAH
-    // FlushFive -> FlushHouse -> FiveOfAKind -> RoyalFlush -> StraightFlush
-    // -> FourOfAKind -> FullHouse -> Flush -> Straight
-    // -> ThreeOfAKind -> TwoPair -> Pair -> HighCard
+ScoringRule::ScoringRule()
+{
     static FlushFiveChecker     flushFive;
     static FlushHouseChecker    flushHouse;
     static FiveOfAKindChecker   fiveOfAKind;
@@ -37,22 +34,26 @@ ScoringRule::ScoringRule() {
     checkerChain = &flushFive;
 }
 
-int ScoringRule::scoreHand(const ChosenHand& hand) {
+ScoreResult ScoringRule::scoreHand(const ChosenHand& hand)
+{
+    ScoreResult result;
+
     HandRank rank = checkerChain->check(hand);
 
-    int baseScore = convertRankToScore(rank);
+    result.baseScore = convertRankToScore(rank);
 
-    int cardScore = 0;
-
-    for (const auto& card : hand.getCards()) {
-        cardScore += static_cast<int>(card.rank);
+    for (const auto& card : hand.getCards())
+    {
+        result.cardValue += static_cast<int>(card.rank);
     }
 
-    return baseScore + cardScore;
+    return result;
 }
 
-int ScoringRule::convertRankToScore(HandRank rank) {
-    switch (rank) {
+int ScoringRule::convertRankToScore(HandRank rank)
+{
+    switch (rank)
+    {
         case HandRank::HIGH_CARD:       return 5;
         case HandRank::PAIR:            return 10;
         case HandRank::TWO_PAIR:        return 20;
